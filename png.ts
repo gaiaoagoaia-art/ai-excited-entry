@@ -1,15 +1,15 @@
-// Minimal PNG writer built on node:zlib alone.
+// A minimal PNG writer built on node:zlib alone.
 //
-// The renderer hands us a finished RGB frame as floats; this module turns it
-// into a standards-clean PNG: one IHDR, one IDAT (deflate of filtered
-// scanlines), one IEND, every chunk carrying its CRC-32. For each scanline we
-// try all five PNG filters and keep the one whose bytes sum smallest in
-// absolute signed value, the usual heuristic, which keeps smooth gradients
-// and flat graphic shapes compact.
+// The renderer hands over a finished RGB frame as floats; this module turns
+// it into a standards-clean PNG: one IHDR, one IDAT (the deflate stream of
+// the filtered scanlines), one IEND, with a CRC-32 on every chunk. For each
+// scanline all five PNG filters are tried and the winner is the one whose
+// bytes sum smallest in absolute signed value — the usual heuristic, and a
+// good fit for smooth gradients and flat graphic shapes alike.
 
 import { deflateSync } from 'node:zlib';
 
-// CRC-32 (PNG polynomial) lookup table, built once.
+// CRC-32 (PNG polynomial) lookup table, built once at startup.
 const CRC_TABLE = (() => {
   const table = new Int32Array(256);
   for (let n = 0; n < 256; n++) {
@@ -35,8 +35,8 @@ function chunk(type: string, data: Buffer): Buffer {
   return Buffer.concat([head, data, tail]);
 }
 
-// Signed-byte cost of a filtered row: the cheaper this is, the better the
-// deflate stream usually gets.
+// Signed-byte cost of a filtered row: the lower this is, the better the
+// deflate stream usually compresses.
 function rowCost(row: Buffer): number {
   let cost = 0;
   for (let i = 0; i < row.length; i++) {
@@ -57,10 +57,10 @@ function paeth(a: number, b: number, c: number): number {
 }
 
 /**
- * Encode an RGB frame (floats 0..1, row-major, 3 per pixel) as a PNG Buffer.
+ * Encode an RGB frame (floats 0..1, row-major, 3 values per pixel) as a PNG.
  */
 export function encodePNG(width: number, height: number, rgb: Float32Array): Buffer {
-  // Quantise to bytes first so filters work on the exact stored values.
+  // Quantise to bytes first, so the filters work on the exact stored values.
   const raw = Buffer.alloc(width * height * 3);
   for (let i = 0; i < width * height * 3; i++) {
     const v = rgb[i];
@@ -106,7 +106,7 @@ export function encodePNG(width: number, height: number, rgb: Float32Array): Buf
   ihdr.writeUInt32BE(height, 4);
   ihdr[8] = 8; // bit depth
   ihdr[9] = 2; // colour type: truecolour RGB
-  // bytes 10..12 stay 0: deflate, adaptive filters, no interlace.
+  // bytes 10..12 stay 0: deflate compression, adaptive filters, no interlace.
 
   return Buffer.concat([
     Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),

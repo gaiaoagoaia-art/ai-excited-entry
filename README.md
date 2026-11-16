@@ -4,15 +4,15 @@
 [![Entries](https://make.fun/api/competitions/ai-excited-01/entries.svg)](https://make.fun/bounty/ai-excited-01)
 [![Deadline](https://make.fun/api/competitions/ai-excited-01/deadline.svg)](https://make.fun/bounty/ai-excited-01)
 
-An entry for the make.fun bounty [ai-excited-01](https://make.fun/bounty/ai-excited-01): one image, drawn by a program, made to excite an AI judge.
+An entry for the make.fun bounty [ai-excited-01](https://make.fun/bounty/ai-excited-01): a single image, drawn entirely by a program, meant to excite an AI judge.
 
 ## The picture
 
-A monumental night wave curls over and tears its crest into fingers of foam that stretch toward an oversized low moon — the instant before the crest closes. Deep inside the curl, a tiny boat with a red sail rides the wave's face, tilted hard, one warm lantern lit. Deep indigo and teal, moon-gold light, a single red accent: a giant curl, a moon disc and a red triangle that still read at 300 pixels across.
+A monumental night wave curls over and tears its crest into fingers of foam that stretch toward an oversized low moon — caught at the instant just before the crest closes. Deep inside the curl, a tiny boat with a red sail rides the wave's face, tilted hard, one warm lantern lit. Deep indigo and teal, moon-gold light, and a single red accent: a giant curl, a moon disc and a red triangle that still read clearly at 300 pixels across.
 
 ## How it works
 
-There is no stored image to copy. `main.ts` runs a procedural renderer (`draw.ts`, Node standard library only) that composes the scene from distance fields and polygons — wave silhouette, foam fingers built as tapered ribbons, a hash-cell star field, a shimmering moon-road on the sea — and splats on seeded spray, foam and wake particles. `png.ts` encodes the finished frame as a PNG with per-scanline adaptive filters. Every random choice comes from a seeded generator, so the program is deterministic: run it twice and the bytes match.
+No stored image is copied. `main.ts` runs a procedural renderer (`draw.ts`, Node standard library only) that composes the scene from distance fields and polygons — the wave silhouette, foam fingers built as tapered ribbons, a hash-cell star field, a shimmering moon-road on the sea — and splats on seeded spray, foam and wake particles. `png.ts` encodes the finished frame as a PNG with per-scanline adaptive filters. Every random choice comes from a seeded generator, so the program is deterministic: run it twice and the output bytes match.
 
 ```sh
 mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
