@@ -1,4 +1,5 @@
 // Entry point for ai-excited-01: "The wave that reaches for the moon".
+// main.ts — entrypoint: renders the scene and writes entry.png into MAKEFUN_OUTPUT_DIR.
 //
 // Nothing here loads a stored picture — the image is drawn fresh on every
 // run by the procedural renderer in draw.ts, then written into the

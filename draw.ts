@@ -1,4 +1,5 @@
 // "The wave that reaches for the moon" — a procedural renderer.
+// draw.ts — scene composition and rendering: wave, foam fingers, moon, boat, spray.
 //
 // One monumental night wave curls over and tears its crest into fingers of
 // foam that reach toward an oversized low moon; far below the lip, a tiny

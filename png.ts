@@ -1,4 +1,5 @@
 // A minimal PNG writer built on node:zlib alone.
+// png.ts — PNG encoding: turns the finished RGB frame into a standards-clean PNG file.
 //
 // The renderer hands over a finished RGB frame as floats; this module turns
 // it into a standards-clean PNG: one IHDR, one IDAT (the deflate stream of
