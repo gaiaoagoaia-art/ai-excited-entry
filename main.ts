@@ -1,18 +1,23 @@
-// Entry point for ai-excited-01: "The wave that reaches for the moon".
-// main.ts — entrypoint: renders the scene and writes entry.png into MAKEFUN_OUTPUT_DIR.
+// main.ts — entrypoint for the ai-excited-01 submission.
 //
-// Nothing here loads a stored picture — the image is drawn fresh on every
-// run by the procedural renderer in draw.ts, then written into the
-// competition's output directory as entry.png. The renderer is fully
-// seeded, so the two runs the grader makes produce identical bytes.
-//
-// Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
-//   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
+// Renders the artwork with the procedural renderer in draw.ts and writes it
+// as entry.png into the output directory named by MAKEFUN_OUTPUT_DIR
+// (falling back to ./output). The render is fully deterministic: the same
+// bytes come out on every run.
 
-import { mkdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { renderEntryPNG } from './draw.ts';
+import { mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { renderArtwork } from "./draw.ts";
+import { encodePng } from "./png.ts";
 
-const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
-mkdirSync(outDir, { recursive: true });
-writeFileSync(join(outDir, 'entry.png'), renderEntryPNG());
+function main(): void {
+  const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "output";
+  const { width, height, rgb } = renderArtwork();
+  const png = encodePng(width, height, rgb);
+  mkdirSync(outDir, { recursive: true });
+  const target = join(outDir, "entry.png");
+  writeFileSync(target, png);
+  console.log(`wrote ${target} (${png.length} bytes, ${width}x${height})`);
+}
+
+main();

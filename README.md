@@ -1,22 +1,34 @@
-# The Wave That Reaches for the Moon
-
 [![make.fun · ai-excited-01](https://make.fun/badge/ai-excited-01.svg)](https://make.fun/bounty/ai-excited-01?utm_source=github&utm_medium=readme&utm_campaign=ai-excited-01)
 [![rank](https://make.fun/badge/ai-excited-01/gaiaoagoaia-art/ai-excited-entry/rank.svg)](https://make.fun/bounty/ai-excited-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=ai-excited-01)
 [![reward](https://make.fun/badge/ai-excited-01/gaiaoagoaia-art/ai-excited-entry/reward.svg)](https://make.fun/bounty/ai-excited-01?utm_source=github&utm_medium=readme&utm_campaign=ai-excited-01)
 
-An entry for the make.fun bounty [ai-excited-01](https://make.fun/bounty/ai-excited-01): a single image, drawn entirely by a program, meant to excite an AI judge.
+# The Wave That Reaches for the Moon
 
-## The picture
+A single image, drawn entirely by code: a monumental night wave in deep
+indigo and teal curls up from the lower left, and at its crest the foam
+tears into five fingers — a hand of water — reaching across a starfield
+toward an oversized pale-gold moon, close enough that two fingertips graze
+its edge. Deep inside the curl's hollow rides a tiny boat with a red sail
+and one lit lantern, there to give the wave its scale: the sea is enormous,
+the boat is not, and the moon is about to be touched.
 
-A monumental night wave curls over and tears its crest into fingers of foam that stretch toward an oversized low moon — caught at the instant just before the crest closes. Deep inside the curl, a tiny boat with a red sail rides the wave's face, tilted hard, one warm lantern lit. Deep indigo and teal, moon-gold light, and a single red accent: a giant curl, a moon disc and a red triangle that still read clearly at 300 pixels across.
+## How it is made
 
-## How it works
+- `main.ts` — the entrypoint. Renders the picture and writes `entry.png`
+  into `$MAKEFUN_OUTPUT_DIR` (or `./output`).
+- `draw.ts` — a seeded procedural renderer. The scene is built from layered
+  shapes in a 1024×1024 design space — sky gradient, starfield, glowing
+  moon, a moonlit sea with a broken gold reflection, two wave silhouettes
+  drawn as smoothed polygons, foam stamped along the crest, five tapered
+  foam fingers, spray, and the boat — rasterised at 2× supersampling and
+  downsampled for clean edges. All randomness comes from a fixed-seed
+  generator, so the output is byte-for-byte deterministic.
+- `png.ts` — a small PNG encoder written for this entry on top of
+  `node:zlib`, with per-row adaptive filter selection.
 
-No stored image is copied. `main.ts` runs a procedural renderer (`draw.ts`, Node standard library only) that composes the scene from distance fields and polygons — the wave silhouette, foam fingers built as tapered ribbons, a hash-cell star field, a shimmering moon-road on the sea — and splats on seeded spray, foam and wake particles. `png.ts` encodes the finished frame as a PNG with per-scanline adaptive filters. Every random choice comes from a seeded generator, so the program is deterministic: run it twice and the output bytes match.
+No image assets, no dependencies beyond the Node standard library, no text
+in the picture. Run it with:
 
 ```sh
-mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
-# writes out/entry.png — 1024×1024, well under the 1 MiB cap
+MAKEFUN_OUTPUT_DIR=. node main.ts
 ```
-
-The rendered `entry.png` is committed beside the code for anyone who just wants to look at it.
