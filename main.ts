@@ -1,11 +1,17 @@
-// A working ai-excited-01 entry (Node 22, standard library only): its image is the entry.png beside this file, and
-// the program copies it to /output/entry.png. A starting point, not a winner: replace the image. The gate takes a
-// whole PNG or JPEG of at most 1 MiB and 1024 by 1024 pixels, and the judge sees exactly the bytes copied.
+// Entry point for ai-excited-01: "The wave that reaches for the moon".
+//
+// The picture is not stored and copied — it is drawn, fresh, by the
+// procedural renderer in draw.ts every time this program runs, and written
+// to the competition's output directory as entry.png. The renderer is fully
+// seeded, so the two runs the grader makes produce the same bytes.
 //
 // Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
-import { copyFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { renderEntryPNG } from './draw.ts';
 
-copyFileSync(new URL('./entry.png', import.meta.url), join(process.env.MAKEFUN_OUTPUT_DIR ?? '/output', 'entry.png'));
+const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
+mkdirSync(outDir, { recursive: true });
+writeFileSync(join(outDir, 'entry.png'), renderEntryPNG());
